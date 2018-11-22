@@ -25,6 +25,11 @@ public class Encripcion {
 		}
 	}
 
+	/**
+	 * Este método agrega los bytes faltantes para convertir un arreglo de n bytes en uno de 16 bytes
+	 * @param arreglo: Arreglo de bytes que van a ser completados
+	 * @return byte[]: Arreglo con un tamaño de 16 bytes
+	 */
 	public byte[] rellenarArregloPara16(byte[] arreglo) {
 		int mod = arreglo.length % 16;
 		if (mod == 0) {
@@ -49,6 +54,12 @@ public class Encripcion {
 		return null;
 	}
 	
+	/**
+	 * Este método encripta un archivo a partir de su ruta dentro del proyecto y la clave generada a partir del diffie hellman
+	 * @param ruta: Ruta del archivo que va a ser encriptado
+	 * @param clave: Clave con la cual se va a encriptar en modalidad AES 128
+	 * @return byte[]: Arreglo de bytes de un archivo que ha sido encriptado
+	 */
 	public byte[] encriptarArchivo(String ruta, Key clave) {
 		try {
 			byte[] bytesArchivo = Files.readAllBytes(new File(ruta).toPath());
@@ -62,6 +73,12 @@ public class Encripcion {
 		return null;
 	}
 
+	/**
+	 * Este método desencripta un arreglo de bytes utilizando una clave generada a partir del diffie hellman
+	 * @param archivo: Arreglo de bytes del archivo encriptado
+	 * @param clave: Clave con la cual se va a encriptar en modalidad AES 128@param clave: 
+	 * @param nombreArchivo: Nombre del archivo con el cual se va a guardar dentro del proyecto
+	 */
 	public void desencriptarArchivo(byte[] archivo, Key clave, String nombreArchivo) {
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, clave);

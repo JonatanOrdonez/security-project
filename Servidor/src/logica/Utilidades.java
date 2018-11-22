@@ -11,7 +11,10 @@ public class Utilidades {
 		numerosPrimos = new ArrayList<Integer>();
 		generarPrimos();
 	}
-
+	
+	/**
+	 * Este método genera un arreglo de primos con tamañio definido por la constante CANTIDAD_PRIMOS_GENERADOS
+	 */
 	public void generarPrimos() {
 		int i = 0;
 		int num = 0;
@@ -29,12 +32,20 @@ public class Utilidades {
 		}
 	}
 
+	/**
+	 * Este método obtiene un número primo aleatorio del arreglo de números primos
+	 * @return int: Número primo aleatorio del arreglo
+	 */
 	public int obtenerNumeroPrimo() {
 		int maximo = numerosPrimos.size();
 		int aleatorio = (int) Math.floor(Math.random() * (maximo + 1));
 		return numerosPrimos.get(aleatorio);
 	}
 
+	/**
+	 * Este método genera un número aleatorio que se encuentra entre o y el valor de la constante MAXIMO_NUMERO_ALEATORIO
+	 * @return int: Número aleatorio
+	 */
 	public int obtenerNumeroAleatorio() {
 		return (int) Math.floor(Math.random() * (MAXIMO_NUMERO_ALEATORIO + 1));
 	}

@@ -14,16 +14,22 @@ public class Cliente {
 	private DataOutputStream dos;
 	private Utilidades utilidades;
 	private Encripcion encripcion;
+	private CheckSum checkSum;
 
 	public final static int PUERTO = 3456;
 
 	public Cliente() {
 		utilidades = new Utilidades();
 		encripcion = new Encripcion();
+		checkSum = new CheckSum();
 		iniciarCliente();
 		diffieHellman();
 	}
 
+	/**
+	 * Este método inicializa un socket que se conecta a un servidor para enviarle archivos
+	 * También se crea un canal de conexión con los clientes que se conectan al servidor por medio de Sockets
+	 */
 	public void iniciarCliente() {
 		try {
 			// Mensaje para mostrar que el cliente se ha conectado con el servidor
@@ -40,6 +46,9 @@ public class Cliente {
 		}
 	}
 
+	/**
+	 * Este método hace el proceso de definición de claves públicas y privadas a través de diffie hellman
+	 */
 	public void diffieHellman() {
 		try {
 			// Calculamos un p primo aleatorio
@@ -72,10 +81,25 @@ public class Cliente {
             Key key = encripcion.generarClave(clave.toByteArray());
             System.out.println("La clave del cliente se ha generado correctamente...");
             
-            byte[] archivoEncriptado = encripcion.encriptarArchivo("descarga.jpg", key);
-            //String enviar = encripcion.convertirByteArrayAString(archivoEncriptado);
+            // Se almacena el nombre del archivo en una variable
+            String nombreArchivo = "juanmanuelmadrid.jpg";
+            
+            // Se envia el nombre del archivo al servidor
+            dos.writeUTF(nombreArchivo);
+            
+            // Se encripta el archivo y se obtiene su valor en un arreglo de bytes
+            byte[] archivoEncriptado = encripcion.encriptarArchivo(nombreArchivo, key);
+            
+            // Se envía al servidor la cantidad de bytes que componen el archivo encriptado
             dos.writeInt(archivoEncriptado.length);
+            
+            // Se envía al servidor el arreglo de bytes
             dos.write(archivoEncriptado);
+            
+            // Se calcula el checksum del archivo
+            String csum = checkSum.CheckSumMD5(nombreArchivo);
+            // Se envía el checksum al servidor
+            dos.writeUTF(csum);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
