@@ -27,8 +27,9 @@ public class Cliente {
 	}
 
 	/**
-	 * Este método inicializa un socket que se conecta a un servidor para enviarle archivos
-	 * También se crea un canal de conexión con los clientes que se conectan al servidor por medio de Sockets
+	 * Este método inicializa un socket que se conecta a un servidor para enviarle
+	 * archivos También se crea un canal de conexión con los clientes que se
+	 * conectan al servidor por medio de Sockets
 	 */
 	public void iniciarCliente() {
 		try {
@@ -47,7 +48,8 @@ public class Cliente {
 	}
 
 	/**
-	 * Este método hace el proceso de definición de claves públicas y privadas a través de diffie hellman
+	 * Este método hace el proceso de definición de claves públicas y privadas a
+	 * través de diffie hellman
 	 */
 	public void diffieHellman() {
 		try {
@@ -60,46 +62,46 @@ public class Cliente {
 			BigInteger gPrimo = new BigInteger(utilidades.obtenerNumeroPrimo() + "");
 			// Enviamos el número primo g al servidor
 			dos.writeUTF(gPrimo.toString());
-			
+
 			// Calculamos un a aleatorio
 			BigInteger aAleatorio = new BigInteger(utilidades.obtenerNumeroAleatorio() + "");
 			// Calculamos la operación A = (g^a) mod p
 			BigInteger A = gPrimo.modPow(aAleatorio, pPrimo);
 			// Enviamos A al servidor
 			dos.writeUTF(A.toString());
-			
+
 			// Lectura del B enviado por el servidor
 			String BValue = dis.readUTF();
 			// Creación de un entero con el BValue
 			BigInteger B = new BigInteger(BValue + "");
-			
+
 			// Creamos la clave del servidor con la operación K = (B^a) mod p
 			BigInteger clave = B.modPow(aAleatorio, pPrimo);
 			System.out.println("Clave generada para el cliente...");
-			
+
 			// Clave generada con AES
-            Key key = encripcion.generarClave(clave.toByteArray());
-            System.out.println("La clave del cliente se ha generado correctamente...");
-            
-            // Se almacena el nombre del archivo en una variable
-            String nombreArchivo = "juanmanuelmadrid.jpg";
-            
-            // Se envia el nombre del archivo al servidor
-            dos.writeUTF(nombreArchivo);
-            
-            // Se encripta el archivo y se obtiene su valor en un arreglo de bytes
-            byte[] archivoEncriptado = encripcion.encriptarArchivo(nombreArchivo, key);
-            
-            // Se envía al servidor la cantidad de bytes que componen el archivo encriptado
-            dos.writeInt(archivoEncriptado.length);
-            
-            // Se envía al servidor el arreglo de bytes
-            dos.write(archivoEncriptado);
-            
-            // Se calcula el checksum del archivo
-            String csum = checkSum.CheckSumMD5(nombreArchivo);
-            // Se envía el checksum al servidor
-            dos.writeUTF(csum);
+			Key key = encripcion.generarClave(clave.toByteArray());
+			System.out.println("La clave del cliente se ha generado correctamente...");
+
+			// Se almacena el nombre del archivo en una variable
+			String nombreArchivo = "juanmanuelmadrid.jpg";
+
+			// Se envia el nombre del archivo al servidor
+			dos.writeUTF(nombreArchivo);
+
+			// Se encripta el archivo y se obtiene su valor en un arreglo de bytes
+			byte[] archivoEncriptado = encripcion.encriptarArchivo(nombreArchivo, key);
+
+			// Se envía al servidor la cantidad de bytes que componen el archivo encriptado
+			dos.writeInt(archivoEncriptado.length);
+
+			// Se envía al servidor el arreglo de bytes
+			dos.write(archivoEncriptado);
+
+			// Se calcula el checksum del archivo
+			String csum = checkSum.CheckSumMD5(nombreArchivo);
+			// Se envía el checksum al servidor
+			dos.writeUTF(csum);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

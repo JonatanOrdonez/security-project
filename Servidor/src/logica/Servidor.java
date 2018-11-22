@@ -29,8 +29,9 @@ public class Servidor {
 	}
 
 	/**
-	 * Este método inicializa un ServerSocket al cual se envían los archivos encriptados.
-	 * También se crea un canal de conexión con los clientes que se conectan al servidor por medio de Sockets
+	 * Este método inicializa un ServerSocket al cual se envían los archivos
+	 * encriptados. También se crea un canal de conexión con los clientes que se
+	 * conectan al servidor por medio de Sockets
 	 */
 	public void iniciarServidor() {
 		try {
@@ -53,7 +54,8 @@ public class Servidor {
 	}
 
 	/**
-	 * Este método hace el proceso de definición de claves públicas y privadas a través de diffie hellman
+	 * Este método hace el proceso de definición de claves públicas y privadas a
+	 * través de diffie hellman
 	 */
 	public void diffieHellman() {
 		try {
@@ -85,29 +87,29 @@ public class Servidor {
 
 			// Clave generada con AES
 			Key key = encripcion.generarClave(clave.toByteArray());
-            System.out.println("La clave del servidor se ha generado correctamente...");
-            
-            // Se lee el nombre del archivo enviado desde el cliente
-            String nombreArchivo = dis.readUTF();
-            
-            // Se obtiene la cantidad de bytes que componen el archivo encriptado
+			System.out.println("La clave del servidor se ha generado correctamente...");
+
+			// Se lee el nombre del archivo enviado desde el cliente
+			String nombreArchivo = dis.readUTF();
+
+			// Se obtiene la cantidad de bytes que componen el archivo encriptado
 			int largo = dis.readInt();
-			
+
 			// Se inicializa un arrelgo de bytes con el tamaño del archivo encriptado
 			byte[] contenido = new byte[largo];
-			
+
 			// Se lee el arreglo de bytes encriptados que vienen del cliente
 			dis.readFully(contenido, 0, contenido.length);
-			
+
 			// Se desencripta el arreglo de bytes y se crea el archivo dentro del proyecto
 			encripcion.desencriptarArchivo(contenido, key, nombreArchivo);
-			
+
 			// Se lee el checksum enviado desde el cliente
-            String csum = dis.readUTF();
-            
-            // Se calcula el ckecsum del archivo generado
-            String csumCalculado = checkSum.CheckSumMD5(nombreArchivo);
-            checkSum.validarCheckSum(csum, csumCalculado);
+			String csum = dis.readUTF();
+
+			// Se calcula el ckecsum del archivo generado
+			String csumCalculado = checkSum.CheckSumMD5(nombreArchivo);
+			checkSum.validarCheckSum(csum, csumCalculado);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
